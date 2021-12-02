@@ -12,6 +12,7 @@ from brother_ql.raster import BrotherQLRaster
 import sys
 from threading import Thread
 import time
+import re
 
 # pip3 install pyqrcode
 # pip3 install pypng
@@ -45,15 +46,30 @@ def take_input():
         user_input = input('(Type "!q" to quit) Type your input: ')
         # doing something with the input
         # printLabel("TestQRCode", "TestQRCodeTitle", "subtitle subtitle subtitle",  "11/29/2021",  'network', 'tcp://10.72.252.87:9100')
-
         if user_input == '!q' or user_input == '!Q':
             thread_running[0] = False
             print('Enter !q, program exit!')
         else:
             updated_date = time.strftime('%Y-%m-%d %H:%M:%S')
-            # labelPrinter.printLabel(user_input, user_input, "",  updated_date,  'network', 'tcp://10.72.252.87:9100')
-            labelPrinter.printLabel(user_input, user_input, "",  updated_date,  'pyusb', 'usb://0x04f9:0x209d')
-            print('Your input is: ', user_input)
+            user_input = re.sub(' +', ' ', user_input)
+
+            input_arr = user_input.split('\t')
+            print(input_arr)
+            
+            title, subtitle = '', ''
+            for each in input_arr:
+                if each:
+
+                    if re.match(r'^\sIT([a-zA-Z]{2}[0-9]|[0-9])', each) or re.match(r'^IT([a-zA-Z]{2}[0-9]|[0-9])', each):
+                        each = re.sub(' I', 'I', each)
+
+                        title = each
+                    else:
+                        subtitle = each
+
+            # labelPrinter.printLabel(title, title, subtitle, updated_date,  'network', 'tcp://10.72.252.87:9100')
+            # labelPrinter.printLabel(title, title, subtitle,  updated_date,  'pyusb', 'usb://0x04f9:0x209d')
+            print('Your title is: ', title, 'Your subtitle is: ',subtitle)
 
 class labelPrinter:
     def printLabel(QRCodeText, title, subtitle,   date,  backend, printer):
@@ -89,7 +105,7 @@ class labelPrinter:
 
 
         Subtitle = subtitle
-        Subtitle2 = '123'
+        Subtitle2 = ''
         if len(Subtitle) > 28:
             if Subtitle[27] != ' ':
                 Subtitle2 = Subtitle[27:]
