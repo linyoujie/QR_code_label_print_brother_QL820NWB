@@ -49,6 +49,25 @@ def take_input():
         if user_input == '!q' or user_input == '!Q':
             thread_running[0] = False
             print('Enter !q, program exit!')
+        elif '!s' in user_input:
+            inputs = user_input.split(',')
+
+            prefix= inputs[1]
+            for each in range(int(inputs[2]),int(inputs[3])):
+                printlabel = prefix +str(each)
+                updated_date = time.strftime('%Y-%m-%d %H:%M:%S')
+                user_input = re.sub(' +', ' ', user_input)
+
+                input_arr = user_input.split('\t')
+                print(input_arr)
+                
+                
+
+                # labelPrinter.printLabel(title, title, subtitle, updated_date,  'network', 'tcp://10.72.252.87:9100')
+                labelPrinter.printLabel(printlabel, printlabel, '',  updated_date,  'network', 'tcp://10.72.252.87:9100')
+                # print('Your title is: ', title, 'Your subtitle is: ',subtitle)
+
+
         else:
             updated_date = time.strftime('%Y-%m-%d %H:%M:%S')
             user_input = re.sub(' +', ' ', user_input)
@@ -178,6 +197,8 @@ class labelPrinter:
         send(instructions=instructions, printer_identifier=printer, backend_identifier=backend, blocking=True)
 
     # printLabel("TestQRCode", "TestQRCodeTitle", "subtitle subtitle subtitle",  "11/29/2021",  'network', 'tcp://10.72.252.87:9100')
+
+
 
 if __name__ == '__main__':
     t1 = Thread(target=my_forever_while)
